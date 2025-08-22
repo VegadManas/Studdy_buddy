@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:studdy_buddy/deadline_tracker/deadline_list.dart';
 
 class HomecreenScaffhold extends StatelessWidget {
   const HomecreenScaffhold({super.key});
@@ -6,9 +7,13 @@ class HomecreenScaffhold extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     void navigateTo(BuildContext context, String pageName) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Navigate to $pageName screen')));
+      if (pageName == 'Deadline Tracker') {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const DeadlineListScreen()),
+        );
+      }
+      // Add more if-else for other modules later (Timetable, GPA, etc.)
     }
 
     const double spacing = 16.0;
