@@ -42,16 +42,6 @@ class HomecreenScaffhold extends StatelessWidget {
 
     return Scaffold(
       body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              Color(0xFFE3F2FD), // very light blue
-              Color(0xFFBBDEFB), // soft sky blue
-            ],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-        ),
         child: Padding(
           padding: const EdgeInsets.all(spacing),
           child: Center(
