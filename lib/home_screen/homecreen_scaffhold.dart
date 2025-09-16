@@ -20,7 +20,9 @@ class HomecreenScaffhold extends StatelessWidget {
     const double borderRadius = 20.0;
 
     final double screenWidth = MediaQuery.of(context).size.width;
-    final double cardWidth = (screenWidth - (3 * spacing)) / 2;
+
+    // 🔹 make cards smaller from sides
+    final double cardWidth = (screenWidth - (5 * spacing)) / 2;
 
     final List<Map<String, dynamic>> cardData = [
       {
@@ -46,34 +48,24 @@ class HomecreenScaffhold extends StatelessWidget {
     ];
 
     return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              Color(0xFFE3F2FD), // very light blue
-              Color(0xFFBBDEFB), // soft sky blue
-            ],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(spacing),
-          child: Center(
-            child: Wrap(
-              spacing: spacing,
-              runSpacing: spacing,
-              children: cardData.map((card) {
-                return _buildCard(
-                  context,
-                  title: card['title'],
-                  icon: card['icon'],
-                  onTap: () => navigateTo(context, card['route']),
-                  width: cardWidth,
-                  borderRadius: borderRadius,
-                );
-              }).toList(),
-            ),
+      body: Padding(
+        padding: const EdgeInsets.all(spacing),
+        // 🔹 move cards UP instead of center
+        child: Align(
+          alignment: Alignment.topCenter,
+          child: Wrap(
+            spacing: spacing,
+            runSpacing: spacing,
+            children: cardData.map((card) {
+              return _buildCard(
+                context,
+                title: card['title'],
+                icon: card['icon'],
+                onTap: () => navigateTo(context, card['route']),
+                width: cardWidth,
+                borderRadius: borderRadius,
+              );
+            }).toList(),
           ),
         ),
       ),
@@ -92,19 +84,14 @@ Widget _buildCard(
   return InkWell(
     onTap: onTap,
     child: Container(
-      height: 220,
+      height: 220, // 🔹 slightly smaller height
       width: width,
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [
-            Color(0xFFFFFFFF), // White
-            Color(0xFFE3F2FD), // Very light blue
-          ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
+        color: const Color.fromARGB(255, 255, 255, 255),
         borderRadius: BorderRadius.circular(borderRadius),
+        // 🔹 add thick border
+        border: Border.all(color: const Color.fromARGB(146, 0, 0, 0), width: 3),
         boxShadow: const [
           BoxShadow(color: Colors.black12, blurRadius: 6, offset: Offset(2, 3)),
         ],
@@ -113,19 +100,23 @@ Widget _buildCard(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
-            padding: const EdgeInsets.all(10),
+            padding: const EdgeInsets.all(14),
             decoration: const BoxDecoration(
               shape: BoxShape.circle,
               color: Color.fromARGB(255, 135, 197, 248), // soft blue
             ),
-            child: Icon(icon, size: 36, color: Colors.white),
+            child: Icon(
+              icon,
+              size: 32,
+              color: Colors.white,
+            ), // 🔹 adjusted size
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 16),
           Text(
             title,
             textAlign: TextAlign.center,
             style: const TextStyle(
-              fontSize: 16,
+              fontSize: 14, // 🔹 adjusted font size for smaller card
               fontWeight: FontWeight.w600,
               color: Color.fromARGB(255, 0, 0, 0), // deep blue text
               shadows: [
