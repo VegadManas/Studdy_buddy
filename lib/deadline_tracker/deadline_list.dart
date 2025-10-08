@@ -10,113 +10,164 @@ class DeadlineListScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final deadlineProvider = Provider.of<DeadlineProvider>(context);
 
-    return Scaffold(
-      // AppBar with gradient
-      appBar: AppBar(
-        title: const Text(
-          "Deadline Tracker",
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-        centerTitle: true,
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                Color(0xFFE3F2FD), // very light blue
-                Color(0xFFBBDEFB), // soft sky blue
-              ],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-          ),
-        ),
-        elevation: 0,
-      ),
-
-      // Background plain white
-      body: Container(
-        color: Colors.white,
-        child: deadlineProvider.deadlines.isEmpty
-            ? const Center(
-                child: Text(
-                  "No deadlines yet. Add one!",
-                  style: TextStyle(fontSize: 16, color: Colors.grey),
-                ),
-              )
-            : ListView.builder(
-                padding: const EdgeInsets.all(12),
-                itemCount: deadlineProvider.deadlines.length,
-                itemBuilder: (context, index) {
-                  final deadline = deadlineProvider.deadlines[index];
-                  return Card(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    elevation: 4,
-                    margin: const EdgeInsets.symmetric(vertical: 8),
-                    child: ListTile(
-                      contentPadding: const EdgeInsets.all(16),
-                      leading: Container(
-                        padding: const EdgeInsets.all(10),
-                        decoration: const BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Color(0xFF90CAF9), // soft plain blue
-                        ),
-                        child: const Icon(
-                          Icons.assignment,
-                          color: Colors.white,
-                        ),
-                      ),
-                      title: Text(
-                        deadline.title,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                        ),
-                      ),
-                      subtitle: Text(
-                        "${deadline.subject} | Due: ${deadline.dueDate.toLocal().toString().split(' ')[0]}",
-                        style: const TextStyle(color: Colors.black87),
-                      ),
-                      trailing: IconButton(
-                        icon: const Icon(Icons.delete, color: Colors.red),
-                        onPressed: () {
-                          deadlineProvider.removeDeadline(index);
-                        },
-                      ),
-                    ),
-                  );
-                },
+    return SafeArea(
+      child: Scaffold(
+        // AppBar (Black & White theme)
+        appBar: AppBar(
+          title: const Text("Deadline Tracker"),
+          centerTitle: true,
+          flexibleSpace: Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [Color(0xFFE3F2FD), Color(0xFF90CAF9)],
               ),
-      ),
-
-      // Floating Action Button with blue gradient
-      floatingActionButton: Container(
-        decoration: BoxDecoration(
-          gradient: const LinearGradient(
-            colors: [Color(0xFFE3F2FD), Color(0xFF64B5F6)],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-          borderRadius: BorderRadius.circular(30),
-          boxShadow: const [
-            BoxShadow(
-              color: Colors.black26,
-              blurRadius: 6,
-              offset: Offset(2, 3),
             ),
-          ],
+          ),
         ),
-        child: FloatingActionButton(
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (_) => const AddDeadlineScreen()),
-            );
-          },
-          child: const Icon(Icons.add, color: Colors.white),
+
+        // Background Black & White
+        body: Container(
+          color: Colors.white,
+          child: deadlineProvider.deadlines.isEmpty
+              ? const Center(
+                  child: Text(
+                    "No deadlines yet. Add one!",
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.black54,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                )
+              : ListView.builder(
+                  padding: const EdgeInsets.all(12),
+                  itemCount: deadlineProvider.deadlines.length,
+                  itemBuilder: (context, index) {
+                    final deadline = deadlineProvider.deadlines[index];
+
+                    return Container(
+                      margin: const EdgeInsets.symmetric(vertical: 10),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: Colors.black12, width: 0.8),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // Leading Icon with background
+                            Container(
+                              padding: const EdgeInsets.all(14),
+                              decoration: BoxDecoration(
+                                color: Colors.black,
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: const Icon(
+                                Icons.assignment_outlined,
+                                color: Colors.white,
+                                size: 28,
+                              ),
+                            ),
+
+                            const SizedBox(width: 16),
+
+                            // Title + Subtitle
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    deadline.title,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 6),
+                                  Text(
+                                    deadline.subject,
+                                    style: const TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    "Due: ${deadline.dueDate.toLocal().toString().split(' ')[0]}",
+                                    style: const TextStyle(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.redAccent,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+
+                            // Delete Button
+                            IconButton(
+                              icon: const Icon(
+                                Icons.delete_forever_rounded,
+                                color: Colors.red,
+                                size: 28,
+                              ),
+                              onPressed: () {
+                                deadlineProvider.removeDeadline(index);
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
+        ),
+        bottomNavigationBar: Container(
+          padding: const EdgeInsets.all(12),
+          decoration: const BoxDecoration(
+            color: Color.fromARGB(255, 5, 176, 255),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black26,
+                blurRadius: 6,
+                offset: Offset(0, -2),
+              ),
+            ],
+          ),
+          child: SizedBox(
+            width: 500,
+            child: ElevatedButton.icon(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const AddDeadlineScreen()),
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.white,
+                foregroundColor: Colors.black,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  side: const BorderSide(color: Colors.black, width: 1.2),
+                ),
+                padding: const EdgeInsets.symmetric(vertical: 16),
+              ),
+              icon: const Icon(Icons.add, color: Colors.black),
+              label: const Text(
+                "Add New Deadline",
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
+              ),
+            ),
+          ),
         ),
       ),
     );
