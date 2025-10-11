@@ -48,6 +48,24 @@ class HomecreenScaffhold extends StatelessWidget {
     ];
 
     return Scaffold(
+      body: Container(
+        child: Padding(
+          padding: const EdgeInsets.all(spacing),
+          child: Center(
+            child: Wrap(
+              spacing: spacing,
+              runSpacing: spacing,
+              children: cardData.map((card) {
+                return _buildCard(
+                  context,
+                  title: card['title'],
+                  icon: card['icon'],
+                  onTap: () => navigateTo(context, card['route']),
+                  width: cardWidth,
+                  borderRadius: borderRadius,
+                );
+              }).toList(),
+            ),
       body: Padding(
         padding: const EdgeInsets.all(spacing),
         // 🔹 move cards UP instead of center
