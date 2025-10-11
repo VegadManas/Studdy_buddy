@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:studdy_buddy/deadline_tracker/deadline_provider.dart';
 
 import 'package:studdy_buddy/onboarding/onboarding.dart';
+import 'package:studdy_buddy/theme.dart';
 
 void main() {
   runApp(
@@ -20,6 +21,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+      theme: lightTheme(),
+      darkTheme: darkTheme(),
+      themeMode: ThemeMode.light,
       home: const OnBoardingScreen(), // No custom splash widget here
     );
   }

@@ -22,121 +22,74 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(60),
-        child: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                Color(0xFFE3F2FD), // very light blue
-                Color(0xFFBBDEFB),
-              ],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
+    final colorScheme = Theme.of(
+      context,
+    ).colorScheme; // Access color scheme once
 
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black12,
-                blurRadius: 4,
-                offset: Offset(0, 3),
+    return Scaffold(
+      // The AppBar now uses the solid colorScheme.primary defined in your theme.
+      appBar: AppBar(
+        // The background color is now a solid primary color from the theme.
+        backgroundColor: colorScheme.primary,
+        elevation: 0,
+        title: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                "Hello, User",
+                style: TextStyle(
+                  // --- KEEP: Using theme onPrimary (for text on the primary color background)
+                  color: colorScheme.onPrimary,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
+                ),
+              ),
+              Text(
+                "Ready to be productive today",
+                style: TextStyle(
+                  // --- REVISED: Removed .withOpacity(0.8) to strictly use the theme color
+                  color: colorScheme.onPrimary,
+                  fontSize: 14,
+                ),
               ),
             ],
           ),
-          child: PreferredSize(
-            preferredSize: const Size.fromHeight(60),
-            child: Container(
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    Color(0xFFE3F2FD), // light blue
-                    Color(0xFFBBDEFB), // soft blue
-                  ],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black12,
-                    blurRadius: 4,
-                    offset: Offset(0, 3),
-                  ),
-                ],
-              ),
-              child: AppBar(
-                backgroundColor: Colors.transparent,
-                elevation: 0,
-                title: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: const [
-                    Text(
-                      "Hello, User",
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
-                      ),
-                    ),
-                    Text(
-                      "Ready to be productive today",
-                      style: TextStyle(color: Colors.black54, fontSize: 14),
-                    ),
-                  ],
-                ),
-                actions: [
-                  IconButton(
-                    onPressed: () {
-                      setState(() {
-                        _currentIndex = 1;
-                      });
-                    },
-                    icon: const CircleAvatar(
-                      backgroundImage: AssetImage("assets/images/profile.png"),
-                    ),
-                  ),
-                ],
-              ),
+        ),
+        actions: [
+          IconButton(
+            onPressed: () {
+              setState(() {
+                _currentIndex = 1;
+              });
+            },
+            icon: const CircleAvatar(
+              backgroundImage: AssetImage("assets/images/profile.png"),
             ),
           ),
-        ),
+        ],
       ),
 
       body: IndexedStack(index: _currentIndex, children: screens),
 
-      bottomNavigationBar: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              Color(0xFFE3F2FD), // very light blue
-              Color(0xFFBBDEFB),
-            ],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black12,
-              blurRadius: 4,
-              offset: Offset(0, -2),
-            ),
-          ],
-        ),
-        child: BottomNavigationBar(
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          currentIndex: _currentIndex,
-          onTap: _onTapped,
-          selectedItemColor: const Color.fromARGB(255, 0, 0, 0),
-          unselectedItemColor: const Color.fromARGB(179, 97, 97, 97),
-          showUnselectedLabels: true,
-          items: const [
-            BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-            BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profile"),
-          ],
-        ),
+      // The BottomNavigationBar now uses the solid colorScheme.surface defined in your theme.
+      bottomNavigationBar: BottomNavigationBar(
+        // The background color is now a solid surface color from the theme.
+        backgroundColor: colorScheme.surface,
+        elevation: 4,
+        currentIndex: _currentIndex,
+        onTap: _onTapped,
+        // The selected item color should contrast the surface/background.
+        selectedItemColor: colorScheme.primary,
+        // The unselected item color should be the standard text color.
+        unselectedItemColor: colorScheme.onSurface,
+        showUnselectedLabels: true,
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profile"),
+        ],
       ),
     );
   }

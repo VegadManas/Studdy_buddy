@@ -37,6 +37,8 @@ dependencies:
   flutter_native_splash: ^2.4.6
   smooth_page_indicator: ^1.2.1
   provider: ^6.1.5+1
+  syncfusion_flutter_pdfviewer: ^31.1.19
+  file_picker: ^10.3.3
 
 dev_dependencies:
   flutter_test:
