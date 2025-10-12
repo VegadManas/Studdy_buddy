@@ -28,7 +28,11 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
         description: "Have to add content in Future",
         buttontext: "Next",
         onPressed: () {
-          _pageController.animateToPage(1, duration: Durations.long1, curve: Curves.linear);
+          _pageController.animateToPage(
+            1,
+            duration: Durations.long1,
+            curve: Curves.linear,
+          );
         },
       ),
       OnBoardingCard(
@@ -37,7 +41,11 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
         description: "Have to add content in Future",
         buttontext: "Next",
         onPressed: () {
-          _pageController.animateToPage(2, duration: Durations.long1, curve: Curves.linear);
+          _pageController.animateToPage(
+            2,
+            duration: Durations.long1,
+            curve: Curves.linear,
+          );
         },
       ),
       OnBoardingCard(
@@ -69,7 +77,11 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
               controller: _pageController,
               count: onBoardingPages.length,
               onDotClicked: (index) {
-                _pageController.animateToPage(index, duration: Durations.long1, curve: Curves.linear);
+                _pageController.animateToPage(
+                  index,
+                  duration: Durations.long1,
+                  curve: Curves.linear,
+                );
               },
             ),
           ],
