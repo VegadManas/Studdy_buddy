@@ -4,7 +4,12 @@ import 'package:flutter/material.dart';
 class AppColors {
   // 🌞 Light theme colors
   static const Color lightPrimary = Color(0xFF5C6BC0); // Indigo
-  static const Color lightAccent = Color(0xFF00BCD4); // Cyan/Turquoise accent
+  static const Color lightAccent = Color.fromARGB(
+    255,
+    152,
+    59,
+    238,
+  ); // Cyan/Turquoise accent
   static const Color lightBackground = Color(0xFFFAFAFA); // Lighter background
   static const Color lightSurface = Colors.white;
   static const Color lightTextPrimary = Colors.black87;
@@ -27,7 +32,6 @@ ThemeData lightTheme() {
     brightness: Brightness.light,
     primaryColor: AppColors.lightPrimary,
     scaffoldBackgroundColor: AppColors.lightBackground,
-
     appBarTheme: const AppBarTheme(
       backgroundColor: AppColors.lightPrimary,
       foregroundColor: Colors.white,

@@ -27,8 +27,7 @@ class _TimetableListScreenState extends State<TimetableListScreen> {
       final newDoc = TimetableDocument(
         id: DateTime.now().toString(),
         title: description?.isNotEmpty == true ? description! : file.name,
-        subtitle:
-            "File: ${file.name} • Size: ${(file.size / 1024).toStringAsFixed(1)} KB",
+        subtitle: "Size: ${(file.size / 1024).toStringAsFixed(1)} KB",
         filePath: file.path!,
       );
 

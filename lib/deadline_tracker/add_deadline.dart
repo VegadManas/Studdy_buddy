@@ -24,6 +24,8 @@ class _AddDeadlineScreenState extends State<AddDeadlineScreen> {
         description: _descriptionController.text,
         subject: _subjectController.text,
         dueDate: _selectedDate!,
+        // NOTE: Ensure your Deadline model supports this property if needed by the list screen
+        // isCompleted: false,
       );
 
       Provider.of<DeadlineProvider>(
@@ -37,28 +39,25 @@ class _AddDeadlineScreenState extends State<AddDeadlineScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Scaffold(
-      // Gradient AppBar
+      // AppBar (Theme-consistent, flat design)
       appBar: AppBar(
-        title: const Text(
+        title: Text(
           "Add Deadline",
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-        centerTitle: true,
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Color(0xFFE3F2FD), Color(0xFF90CAF9)],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: colorScheme.onPrimary, // Uses theme's onPrimary
           ),
         ),
-        elevation: 0,
+        centerTitle: true,
+        backgroundColor: colorScheme.primary, // Uses theme's primary
+        elevation: 0, // Flat design
       ),
 
       body: Container(
-        color: Colors.white,
+        color: colorScheme.background, // Uses theme's background
         padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
@@ -69,11 +68,32 @@ class _AddDeadlineScreenState extends State<AddDeadlineScreen> {
                 controller: _titleController,
                 decoration: InputDecoration(
                   labelText: "Title",
-                  prefixIcon: const Icon(Icons.title, color: Color(0xFF64B5F6)),
+                  labelStyle: TextStyle(color: colorScheme.onSurfaceVariant),
+                  prefixIcon: Icon(
+                    Icons.title,
+                    color: colorScheme.primary,
+                  ), // Icon uses theme primary
                   filled: true,
-                  fillColor: const Color(0xFFF5F9FF),
+                  fillColor: colorScheme
+                      .surfaceVariant, // Fill uses a light surface variant
+                  // Custom border styling for flat look
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide.none,
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(
+                      color: colorScheme.primary,
+                      width: 2,
+                    ),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(
+                      color: colorScheme.outlineVariant,
+                      width: 1,
+                    ),
                   ),
                 ),
                 validator: (value) =>
@@ -86,14 +106,30 @@ class _AddDeadlineScreenState extends State<AddDeadlineScreen> {
                 controller: _descriptionController,
                 decoration: InputDecoration(
                   labelText: "Description",
-                  prefixIcon: const Icon(
+                  labelStyle: TextStyle(color: colorScheme.onSurfaceVariant),
+                  prefixIcon: Icon(
                     Icons.description,
-                    color: Color(0xFF64B5F6),
+                    color: colorScheme.primary,
                   ),
                   filled: true,
-                  fillColor: const Color(0xFFF5F9FF),
+                  fillColor: colorScheme.surfaceVariant,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide.none,
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(
+                      color: colorScheme.primary,
+                      width: 2,
+                    ),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(
+                      color: colorScheme.outlineVariant,
+                      width: 1,
+                    ),
                   ),
                 ),
                 maxLines: 2,
@@ -105,11 +141,27 @@ class _AddDeadlineScreenState extends State<AddDeadlineScreen> {
                 controller: _subjectController,
                 decoration: InputDecoration(
                   labelText: "Subject",
-                  prefixIcon: const Icon(Icons.book, color: Color(0xFF64B5F6)),
+                  labelStyle: TextStyle(color: colorScheme.onSurfaceVariant),
+                  prefixIcon: Icon(Icons.book, color: colorScheme.primary),
                   filled: true,
-                  fillColor: const Color(0xFFF5F9FF),
+                  fillColor: colorScheme.surfaceVariant,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide.none,
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(
+                      color: colorScheme.primary,
+                      width: 2,
+                    ),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(
+                      color: colorScheme.outlineVariant,
+                      width: 1,
+                    ),
                   ),
                 ),
               ),
@@ -117,7 +169,10 @@ class _AddDeadlineScreenState extends State<AddDeadlineScreen> {
 
               // Pick Date button
               ElevatedButton.icon(
-                icon: const Icon(Icons.calendar_today),
+                icon: Icon(
+                  Icons.calendar_today,
+                  color: colorScheme.onSecondary,
+                ),
                 onPressed: () async {
                   DateTime? picked = await showDatePicker(
                     context: context,
@@ -137,8 +192,11 @@ class _AddDeadlineScreenState extends State<AddDeadlineScreen> {
                       : "Due: ${_selectedDate!.toLocal().toString().split(' ')[0]}",
                 ),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF64B5F6),
-                  foregroundColor: Colors.white,
+                  backgroundColor:
+                      colorScheme.secondary, // Uses theme secondary
+                  foregroundColor:
+                      colorScheme.onSecondary, // Uses theme onSecondary
+                  elevation: 0,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
@@ -147,40 +205,25 @@ class _AddDeadlineScreenState extends State<AddDeadlineScreen> {
               ),
               const SizedBox(height: 24),
 
-              // Save button with gradient
-              Container(
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    colors: [Color(0xFF64B5F6), Color(0xFF1976D2)],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
+              // Save button (Removed gradient container and used primary color)
+              ElevatedButton(
+                onPressed: _submitForm,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: colorScheme.primary, // Uses theme primary
+                  foregroundColor:
+                      colorScheme.onPrimary, // Uses theme onPrimary
+                  elevation: 0,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
                   ),
-                  borderRadius: BorderRadius.circular(12),
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Colors.black26,
-                      blurRadius: 6,
-                      offset: Offset(2, 3),
-                    ),
-                  ],
+                  padding: const EdgeInsets.symmetric(vertical: 16),
                 ),
-                child: ElevatedButton(
-                  onPressed: _submitForm,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.transparent,
-                    shadowColor: Colors.transparent,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                  ),
-                  child: const Text(
-                    "Save Deadline",
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
+                child: Text(
+                  "Save Deadline",
+                  style: TextStyle(
+                    color: colorScheme.onPrimary,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
