@@ -16,11 +16,10 @@ class AppColors {
   static const Color lightTextSecondary = Colors.black54;
   static const Color lightError = Colors.red;
 
-  // 🌚 Dark theme colors (future use)
-  static const Color darkPrimary = Color(0xFF1E1E1E); // Charcoal
+  static const Color darkPrimary = Color(0xFF3949AB);
   static const Color darkAccent = Color(0xFF64B5F6); // Soft blue highlight
-  static const Color darkBackground = Color(0xFF121212);
-  static const Color darkSurface = Color(0xFF1F1F1F);
+  static const Color darkBackground = Color(0xFF12121D);
+  static const Color darkSurface = Color(0xFF1E1E2C);
   static const Color darkTextPrimary = Colors.white;
   static const Color darkTextSecondary = Colors.white70;
   static const Color darkError = Color(0xFFEF5350);
@@ -63,7 +62,6 @@ ThemeData lightTheme() {
   );
 }
 
-/// 🌙 Dark Theme (defined but not active yet)
 ThemeData darkTheme() {
   return ThemeData(
     brightness: Brightness.dark,
@@ -71,12 +69,14 @@ ThemeData darkTheme() {
     scaffoldBackgroundColor: AppColors.darkBackground,
 
     appBarTheme: const AppBarTheme(
+      // We use the colored darkPrimary here
       backgroundColor: AppColors.darkPrimary,
       foregroundColor: Colors.white,
       elevation: 2,
     ),
 
     floatingActionButtonTheme: const FloatingActionButtonThemeData(
+      // We use the bright accent here
       backgroundColor: AppColors.darkAccent,
       foregroundColor: Colors.black,
     ),
@@ -93,10 +93,14 @@ ThemeData darkTheme() {
     colorScheme: const ColorScheme.dark(
       primary: AppColors.darkPrimary,
       secondary: AppColors.darkAccent,
+      // We use the tinted darkSurface for cards/containers
       surface: AppColors.darkSurface,
+      background: AppColors.darkBackground,
       error: AppColors.darkError,
       onPrimary: Colors.white,
       onSecondary: Colors.black,
+      onSurface: AppColors.darkTextPrimary,
     ),
+    useMaterial3: true,
   );
 }

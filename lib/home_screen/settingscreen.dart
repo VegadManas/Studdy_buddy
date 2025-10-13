@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:studdy_buddy/theme_provider.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -15,29 +17,22 @@ class SettingsScreen extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
 
     return Card(
-      // --- CHANGE: Set elevation to 0 to remove shadow
       elevation: 0,
-      // --- CHANGE: Card color uses theme surface
       color: colorScheme.surface,
       margin: const EdgeInsets.symmetric(vertical: 6),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: ListTile(
-        // --- CHANGE: Icon color uses theme primary
         leading: Icon(icon, color: colorScheme.primary),
         title: Text(
           title,
           style: TextStyle(
             fontWeight: FontWeight.w500,
-            // --- CHANGE: Title text color uses theme onSurface
             color: colorScheme.onSurface,
           ),
         ),
         subtitle: Text(
           subtitle,
-          style: TextStyle(
-            // --- CHANGE: Subtitle text color uses theme onSurfaceVariant for muted look
-            color: colorScheme.onSurfaceVariant,
-          ),
+          style: TextStyle(color: colorScheme.onSurfaceVariant),
         ),
         trailing: trailing,
         onTap: onTap,
@@ -48,21 +43,19 @@ class SettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final themeProvider = Provider.of<ThemeProvider>(
+      context,
+    ); // ✅ Access theme provider
 
     return Scaffold(
-      // --- CHANGE: Background color uses theme background
       backgroundColor: colorScheme.background,
-
-      // --- CHANGE: Replaced PreferredSize/Container with simple AppBar (no gradient/shadow)
       appBar: AppBar(
-        // AppBar color uses theme primary
         backgroundColor: colorScheme.primary,
         elevation: 0,
         centerTitle: true,
         title: Text(
           "Settings",
           style: TextStyle(
-            // --- CHANGE: Text color uses theme onPrimary (for text on primary background)
             color: colorScheme.onPrimary,
             fontWeight: FontWeight.w600,
             fontSize: 20,
@@ -85,9 +78,9 @@ class SettingsScreen extends StatelessWidget {
             title: "Dark Mode",
             subtitle: "Customize appearance",
             trailing: Switch(
-              value: false,
-              onChanged: (val) {},
-              // Switch uses theme primary color by default but we ensure it's theme-aware
+              value: themeProvider.isDarkMode, // ✅ uses current theme state
+              onChanged: (val) =>
+                  themeProvider.toggleTheme(val), // ✅ updates theme
               activeColor: colorScheme.secondary,
             ),
           ),

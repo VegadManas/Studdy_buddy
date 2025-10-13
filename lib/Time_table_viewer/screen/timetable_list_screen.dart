@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:studdy_buddy/Time_table_viewer/models/timetable_documet.dart';
 import '../widgets/pdf_viewer_dialog.dart';
 
@@ -12,8 +13,26 @@ class TimetableListScreen extends StatefulWidget {
 
 class _TimetableListScreenState extends State<TimetableListScreen> {
   List<TimetableDocument> documents = [];
-  // Removed static const Color primaryBlue = Colors.blue;
+  late Box _timetableBox; // ✅ Step 1: Hive box reference
 
+  @override
+  void initState() {
+    super.initState();
+    _timetableBox = Hive.box("timetableBox"); // ✅ Step 2: open the box
+    _loadDocuments(); // ✅ Step 3: load existing saved data
+  }
+
+  // ✅ Step 4: Load previously saved timetables from Hive
+  void _loadDocuments() {
+    final data = _timetableBox.values.toList();
+    setState(() {
+      documents = data.map((item) {
+        return TimetableDocument.fromMap(Map<String, dynamic>.from(item));
+      }).toList();
+    });
+  }
+
+  // ✅ Step 5: Save new timetable to Hive
   Future<void> _pickAndAddFile() async {
     final result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
@@ -34,9 +53,13 @@ class _TimetableListScreenState extends State<TimetableListScreen> {
       setState(() {
         documents.add(newDoc);
       });
+
+      // ✅ Save to Hive
+      _timetableBox.put(newDoc.id, newDoc.toMap());
     }
   }
 
+  // unchanged: dialog for description input
   Future<String?> _getDescriptionFromUser(BuildContext context) async {
     final controller = TextEditingController();
     final colorScheme = Theme.of(context).colorScheme;
@@ -61,7 +84,6 @@ class _TimetableListScreenState extends State<TimetableListScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            // Cancel uses muted color
             child: Text(
               "Cancel",
               style: TextStyle(color: colorScheme.onSurfaceVariant),
@@ -69,7 +91,6 @@ class _TimetableListScreenState extends State<TimetableListScreen> {
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, controller.text),
-            // Save uses theme primary color
             child: Text("Save", style: TextStyle(color: colorScheme.primary)),
           ),
         ],
@@ -77,10 +98,12 @@ class _TimetableListScreenState extends State<TimetableListScreen> {
     );
   }
 
+  // ✅ Step 6: Delete both from UI & Hive
   void _deleteDocument(String id) {
     setState(() {
       documents.removeWhere((doc) => doc.id == id);
     });
+    _timetableBox.delete(id);
   }
 
   @override
@@ -91,11 +114,9 @@ class _TimetableListScreenState extends State<TimetableListScreen> {
       appBar: AppBar(
         title: const Text("Timetable Viewer"),
         centerTitle: true,
-        // Using theme primary color and onPrimary for consistency
         backgroundColor: colorScheme.primary,
         foregroundColor: colorScheme.onPrimary,
       ),
-      // Background color uses theme background
       backgroundColor: colorScheme.background,
       body: documents.isEmpty
           ? Center(
@@ -104,7 +125,6 @@ class _TimetableListScreenState extends State<TimetableListScreen> {
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 16,
-                  // Text uses theme onSurfaceVariant for muted look
                   color: colorScheme.onSurfaceVariant,
                   fontWeight: FontWeight.w500,
                 ),
@@ -123,7 +143,6 @@ class _TimetableListScreenState extends State<TimetableListScreen> {
                     background: Container(
                       margin: const EdgeInsets.symmetric(horizontal: 8),
                       decoration: BoxDecoration(
-                        // Delete background uses theme error color
                         color: colorScheme.error,
                         borderRadius: BorderRadius.circular(15),
                       ),
@@ -131,7 +150,6 @@ class _TimetableListScreenState extends State<TimetableListScreen> {
                       padding: const EdgeInsets.only(right: 30),
                       child: Icon(
                         Icons.delete,
-                        // Delete icon uses theme onError color (white/light)
                         color: colorScheme.onError,
                         size: 30,
                       ),
@@ -139,24 +157,19 @@ class _TimetableListScreenState extends State<TimetableListScreen> {
                     onDismissed: (_) => _deleteDocument(doc.id),
                     child: Container(
                       decoration: BoxDecoration(
-                        // Item background uses theme surface
                         color: colorScheme.surface,
                         borderRadius: BorderRadius.circular(15),
-                        // Subtle border using onSurface with low opacity
                         border: Border.all(
                           color: colorScheme.onSurface.withOpacity(0.1),
                           width: 1,
                         ),
-                        // BoxShadow removed
                       ),
                       child: ListTile(
                         contentPadding: const EdgeInsets.all(16),
                         leading: CircleAvatar(
-                          // Avatar background uses theme primary
                           backgroundColor: colorScheme.primary,
                           child: Icon(
                             Icons.picture_as_pdf,
-                            // PDF icon color uses theme onPrimary
                             color: colorScheme.onPrimary,
                           ),
                         ),
@@ -164,26 +177,22 @@ class _TimetableListScreenState extends State<TimetableListScreen> {
                           doc.title,
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            // Title text color uses theme onSurface
                             color: colorScheme.onSurface,
                           ),
                         ),
                         subtitle: Text(
                           doc.subtitle,
-                          // Subtitle text color uses theme onSurfaceVariant
                           style: TextStyle(color: colorScheme.onSurfaceVariant),
                         ),
                         trailing: IconButton(
                           icon: Icon(
                             Icons.visibility,
-                            // Visibility icon color uses theme primary
                             color: colorScheme.primary,
                           ),
                           onPressed: () => showPdfViewerDialog(
                             context,
                             doc.filePath,
                             doc.title,
-                            // Removed the colorScheme.primary argument
                           ),
                         ),
                       ),
@@ -193,9 +202,7 @@ class _TimetableListScreenState extends State<TimetableListScreen> {
               },
             ),
       floatingActionButton: FloatingActionButton.extended(
-        // FAB background uses theme primary
         backgroundColor: colorScheme.primary,
-        // FAB icon/text color uses theme onPrimary
         icon: Icon(Icons.upload_file, color: colorScheme.onPrimary),
         label: Text(
           "Add Timetable",

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:studdy_buddy/Time_table_viewer/screen/timetable_list_screen.dart';
 import 'package:studdy_buddy/deadline_tracker/deadline_list.dart';
+import 'package:studdy_buddy/gpa_calculator/gpa_screen.dart';
+import 'package:studdy_buddy/material_screen/material_screen.dart';
 
 class HomecreenScaffhold extends StatelessWidget {
   const HomecreenScaffhold({super.key});
@@ -21,8 +23,17 @@ class HomecreenScaffhold extends StatelessWidget {
           context,
           MaterialPageRoute(builder: (context) => const TimetableListScreen()),
         );
+      } else if (pageName == "GPA Calculator") {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const GpaCalculator()),
+        );
+      } else if (pageName == "Study Materials") {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const MaterialScreen()),
+        );
       }
-      // You can add other pages later here
     }
 
     const double spacing = 16.0;

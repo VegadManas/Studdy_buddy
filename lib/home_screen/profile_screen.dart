@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:studdy_buddy/home_screen/home_screen.dart';
 import 'package:studdy_buddy/home_screen/settingscreen.dart';
+// <-- Import your login page
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
-  // Helper method to build option cards
+  // Simulated login state (you’ll replace this with real Firebase/Auth state later)
+  final bool isLoggedIn = false;
+
+  // Helper to build option cards
   Widget _buildOptionCard(
     BuildContext context, {
     required IconData icon,
@@ -14,9 +19,7 @@ class ProfileScreen extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
 
     return Card(
-      // --- CHANGE: Set elevation to 0 to remove shadow
       elevation: 0,
-      // --- CHANGE: Card color uses theme surface
       color: colorScheme.surface,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: ListTile(
@@ -24,20 +27,14 @@ class ProfileScreen extends StatelessWidget {
           horizontal: 20,
           vertical: 12,
         ),
-        // --- CHANGE: Icon color uses theme primary
         leading: Icon(icon, color: colorScheme.primary),
         title: Text(
           title,
-          style: TextStyle(
-            fontSize: 16,
-            // --- CHANGE: Text color uses theme onSurface
-            color: colorScheme.onSurface,
-          ),
+          style: TextStyle(fontSize: 16, color: colorScheme.onSurface),
         ),
         trailing: Icon(
           Icons.arrow_forward_ios,
           size: 16,
-          // --- CHANGE: Trailing icon color uses theme onSurfaceVariant for muted look
           color: colorScheme.onSurfaceVariant,
         ),
         onTap: onTap,
@@ -50,19 +47,14 @@ class ProfileScreen extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
-      // --- CHANGE: Background color uses theme background
       backgroundColor: colorScheme.background,
-
-      // --- CHANGE: Replaced PreferredSize/Container with simple AppBar (no gradient/shadow)
       appBar: AppBar(
-        // AppBar color uses theme primary
         backgroundColor: colorScheme.primary,
         elevation: 0,
         centerTitle: true,
         title: Text(
           "Profile",
           style: TextStyle(
-            // --- CHANGE: Text color uses theme onPrimary (for text on primary background)
             color: colorScheme.onPrimary,
             fontWeight: FontWeight.w600,
             fontSize: 20,
@@ -73,37 +65,81 @@ class ProfileScreen extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         children: [
           const SizedBox(height: 20),
-          const Center(
-            child: CircleAvatar(
-              radius: 45,
-              backgroundImage: AssetImage('assets/images/profile.png'),
-            ),
-          ),
-          const SizedBox(height: 12),
-          Center(
-            child: Text(
-              'John Doe',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                // --- CHANGE: Text color uses theme onSurface
-                color: colorScheme.onSurface,
+
+          // --- Show avatar & info if logged in ---
+          if (isLoggedIn) ...[
+            const Center(
+              child: CircleAvatar(
+                radius: 45,
+                backgroundImage: AssetImage('assets/images/profile.png'),
               ),
             ),
-          ),
-          Center(
-            child: Text(
-              'john.doe@example.com',
-              style: TextStyle(
-                fontSize: 14,
-                // --- CHANGE: Secondary text color uses theme onSurfaceVariant
-                color: colorScheme.onSurfaceVariant,
+            const SizedBox(height: 12),
+            Center(
+              child: Text(
+                'John Doe',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: colorScheme.onSurface,
+                ),
               ),
             ),
-          ),
+            Center(
+              child: Text(
+                'john.doe@example.com',
+                style: TextStyle(
+                  fontSize: 14,
+                  color: colorScheme.onSurfaceVariant,
+                ),
+              ),
+            ),
+          ]
+          // --- Otherwise show Login / Sign Up button ---
+          else ...[
+            Center(
+              child: CircleAvatar(
+                radius: 45,
+                backgroundColor: colorScheme.primary.withOpacity(0.2),
+                child: Icon(Icons.person, color: colorScheme.primary, size: 50),
+              ),
+            ),
+            const SizedBox(height: 16),
+            Center(
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const HomeScreen()),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: colorScheme.primary,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 40,
+                    vertical: 14,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                ),
+                child: Text(
+                  "Log In / Sign Up",
+                  style: TextStyle(
+                    color: colorScheme.onPrimary,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ),
+          ],
+
           const SizedBox(height: 30),
+
+          // --- Always show other options ---
           _buildOptionCard(
-            context, // Passing context
+            context,
             icon: Icons.settings,
             title: 'Settings',
             onTap: () {
@@ -115,11 +151,17 @@ class ProfileScreen extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           _buildOptionCard(
-            context, // Passing context
+            context,
             icon: Icons.logout,
-            title: 'Logout',
+            title: isLoggedIn ? 'Logout' : 'Not logged in',
             onTap: () {
-              // Add logout logic
+              if (isLoggedIn) {
+                // TODO: Add logout logic
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text("You are not logged in.")),
+                );
+              }
             },
           ),
         ],
