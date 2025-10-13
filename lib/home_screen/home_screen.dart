@@ -12,7 +12,10 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _currentIndex = 0;
 
-  final List<Widget> screens = [HomecreenScaffhold(), ProfileScreen()];
+  final List<Widget> screens = [
+    const HomecreenScaffhold(),
+    const ProfileScreen(),
+  ];
 
   void _onTapped(int index) {
     setState(() {
@@ -22,68 +25,60 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(
-      context,
-    ).colorScheme; // Access color scheme once
+    final colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
-      // The AppBar now uses the solid colorScheme.primary defined in your theme.
-      appBar: AppBar(
-        // The background color is now a solid primary color from the theme.
-        backgroundColor: colorScheme.primary,
-        elevation: 0,
-        title: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                "Hello, User",
-                style: TextStyle(
-                  // --- KEEP: Using theme onPrimary (for text on the primary color background)
-                  color: colorScheme.onPrimary,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
+      appBar: _currentIndex == 0
+          ? AppBar(
+              backgroundColor: colorScheme.primary,
+              elevation: 0,
+              title: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      "Hello, User",
+                      style: TextStyle(
+                        color: colorScheme.onPrimary,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                      ),
+                    ),
+                    Text(
+                      "Ready to be productive today",
+                      style: TextStyle(
+                        color: colorScheme.onPrimary,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              Text(
-                "Ready to be productive today",
-                style: TextStyle(
-                  // --- REVISED: Removed .withOpacity(0.8) to strictly use the theme color
-                  color: colorScheme.onPrimary,
-                  fontSize: 14,
+              actions: [
+                IconButton(
+                  onPressed: () {
+                    setState(() {
+                      _currentIndex = 1;
+                    });
+                  },
+                  icon: const CircleAvatar(
+                    backgroundImage: AssetImage("assets/images/profile.png"),
+                  ),
                 ),
-              ),
-            ],
-          ),
-        ),
-        actions: [
-          IconButton(
-            onPressed: () {
-              setState(() {
-                _currentIndex = 1;
-              });
-            },
-            icon: const CircleAvatar(
-              backgroundImage: AssetImage("assets/images/profile.png"),
-            ),
-          ),
-        ],
-      ),
+              ],
+            )
+          : null, // No AppBar when on Profile tab (ProfileScreen has its own)
 
       body: IndexedStack(index: _currentIndex, children: screens),
 
-      // The BottomNavigationBar now uses the solid colorScheme.surface defined in your theme.
       bottomNavigationBar: BottomNavigationBar(
-        // The background color is now a solid surface color from the theme.
         backgroundColor: colorScheme.surface,
         elevation: 4,
         currentIndex: _currentIndex,
         onTap: _onTapped,
-        // The selected item color should contrast the surface/background.
         selectedItemColor: colorScheme.primary,
-        // The unselected item color should be the standard text color.
         unselectedItemColor: colorScheme.onSurface,
         showUnselectedLabels: true,
         items: const [

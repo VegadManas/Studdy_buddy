@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:studdy_buddy/home_screen/home_screen.dart';
 import 'package:studdy_buddy/home_screen/settingscreen.dart';
-// <-- Import your login page
+import 'package:studdy_buddy/auth/login_screen.dart'; // <-- Import your login page
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -110,7 +109,9 @@ class ProfileScreen extends StatelessWidget {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const HomeScreen()),
+                    MaterialPageRoute(
+                      builder: (context) => const LoginScreen(),
+                    ),
                   );
                 },
                 style: ElevatedButton.styleFrom(
